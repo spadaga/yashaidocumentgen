@@ -1,13 +1,13 @@
 {
     "functions": {
       "app/actions.ts": {
-        "maxDuration": 900
+        "maxDuration": 60
       },
       "app/actions-upload.ts": {
-        "maxDuration": 900
+        "maxDuration": 60
       },
       "app/**/*.ts": {
-        "maxDuration": 900
+        "maxDuration": 60
       }
     }
   }
