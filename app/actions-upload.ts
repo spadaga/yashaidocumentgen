@@ -867,7 +867,7 @@ export async function generateDocumentationFromFiles(
         if (isProduction) {
           // In production, limit to ensure we don't exceed 20 total results
           const remainingSlots = 20 - currentResultCount
-          modelsToTest = models.slice(0, Math.min(2, remainingSlots))
+          modelsToTest = models.slice(0, Math.min(4, remainingSlots))
         } else {
           // In development, use all models
           modelsToTest = models
