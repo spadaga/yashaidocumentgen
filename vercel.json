@@ -1,4 +1,12 @@
 {
+    "functions": {
+      "app/actions.ts": {
+        "maxDuration": 45
+      },
+      "app/**/*.ts": {
+        "maxDuration": 45
+      }
+    },
     "builds": [
       {
         "src": "package.json",
@@ -9,3 +17,4 @@
       }
     ]
   }
+  
