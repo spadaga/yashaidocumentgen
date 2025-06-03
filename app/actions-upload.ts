@@ -41,64 +41,14 @@ const providers = {
     baseURL: "https://api.cerebras.ai/v1",
     apiKey: process.env.CEREBRAS_API_KEY,
   }),
-
-  // Newly Added Providers (OpenAI-compatible)
-  huggingface: createOpenAI({
-    baseURL: "https://api-inference.huggingface.co/v1",
-    apiKey: process.env.HUGGINGFACE_API_KEY,
-  }),
-  mistral: createOpenAI({
-    baseURL: "https://api.mistral.ai/v1",
-    apiKey: process.env.MISTRAL_API_KEY,
-  }),
-  replicate: createOpenAI({
-    baseURL: "https://api.replicate.com/v1",
-    apiKey: process.env.REPLICATE_API_KEY,
-  }),
-  perplexity: createOpenAI({
-    baseURL: "https://api.perplexity.ai",
-    apiKey: process.env.PERPLEXITY_API_KEY,
-  }),
-  anyscale: createOpenAI({
-    baseURL: "https://api.endpoints.anyscale.com/v1",
-    apiKey: process.env.ANYSCALE_API_KEY,
-  }),
-  cohere: createOpenAI({
-    baseURL: "https://api.cohere.ai/v1",
-    apiKey: process.env.COHERE_API_KEY,
-  }),
-
-  // Additional Free Providers (Using OpenAI-compatible endpoints)
-  anthropic: createOpenAI({
-    baseURL: "https://api.anthropic.com/v1",
-    apiKey: process.env.ANTHROPIC_API_KEY,
-  }),
-  aleph: createOpenAI({
-    baseURL: "https://api.aleph-alpha.com/v1",
-    apiKey: process.env.ALEPH_API_KEY,
-  }),
-  stability: createOpenAI({
-    baseURL: "https://api.stability.ai/v1",
-    apiKey: process.env.STABILITY_API_KEY,
-  }),
-
-  // Additional providers to reach 86 results
-  gemini: createOpenAI({
-    baseURL: "https://generativelanguage.googleapis.com/v1beta",
-    apiKey: process.env.GEMINI_API_KEY,
-  }),
-  claude: createOpenAI({
-    baseURL: "https://api.anthropic.com/v1",
-    apiKey: process.env.CLAUDE_API_KEY,
-  }),
 }
 
 // Environment detection
 const isProduction = process.env.VERCEL || process.env.NODE_ENV === "production"
 
-// Timeout configuration - NO TIMEOUT for local, UNLIMITED for production
-const PRODUCTION_TIMEOUT = 0 // No timeout for production (unlimited)
-const API_CALL_TIMEOUT = 0 // No timeout for API calls in both environments
+// Timeout configuration - 50 seconds max for Vercel free plan
+const PRODUCTION_TIMEOUT = 50000 // 50 seconds for production
+const API_CALL_TIMEOUT = 30000 // 30 seconds for API calls
 
 interface ProjectInfo {
   name: string
@@ -136,14 +86,16 @@ interface GenerateDocumentationResult {
   error?: string
 }
 
-// Enhanced timeout wrapper - DISABLED (no timeouts)
+// Enhanced timeout wrapper with 50-second limit
 async function withTimeout<T>(promise: Promise<T>, timeoutMs: number, operation: string): Promise<T> {
-  // Always return the promise without timeout
-  return promise
+  const timeout = new Promise<never>((_, reject) =>
+    setTimeout(() => reject(new Error(`${operation} timed out after ${timeoutMs}ms`)), timeoutMs),
+  )
+  return Promise.race([promise, timeout])
 }
 
 // Retry wrapper for API calls
-async function withRetry<T>(fn: () => Promise<T>, maxRetries = 2, delay = 1000): Promise<T> {
+async function withRetry<T>(fn: () => Promise<T>, maxRetries = 1, delay = 500): Promise<T> {
   let lastError: Error
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
@@ -163,7 +115,7 @@ async function withRetry<T>(fn: () => Promise<T>, maxRetries = 2, delay = 1000):
         throw lastError
       }
 
-      // Wait before retry in both environments
+      // Wait before retry
       if (delay > 0) {
         await new Promise((resolve) => setTimeout(resolve, delay * attempt))
       }
@@ -265,12 +217,16 @@ function detectFramework(packageInfo?: any, files?: Array<{ name: string; conten
   return "Custom"
 }
 
-// Enhanced file processing - no timeout
+// Enhanced file processing with timeout
 async function processUploadedFiles(formData: FormData): Promise<{
   files: Array<{ path: string; content: string; language: string }>
   projectInfo: ProjectInfo
 }> {
-  return processUploadedFilesInternal(formData)
+  return withTimeout(
+    processUploadedFilesInternal(formData),
+    15000, // 15 seconds for file processing
+    "File processing",
+  )
 }
 
 async function processUploadedFilesInternal(formData: FormData): Promise<{
@@ -366,7 +322,7 @@ async function processUploadedFilesInternal(formData: FormData): Promise<{
   return { files, projectInfo }
 }
 
-// Enhanced documentation generation - no timeout restrictions
+// Enhanced documentation generation with timeout restrictions
 async function generateSingleDocumentation(
   files: Array<{ path: string; content: string; language: string }>,
   projectInfo: ProjectInfo,
@@ -379,10 +335,10 @@ async function generateSingleDocumentation(
 
   try {
     const projectContent = files
-      .slice(0, 12) // Use same limit for both environments
+      .slice(0, 8) // Reduced from 12 to 8 for faster processing
       .map(
         (file) =>
-          `## File: ${file.path} (${file.language})\n\`\`\`${file.language.toLowerCase()}\n${file.content.slice(0, 8000)}\n\`\`\``,
+          `## File: ${file.path} (${file.language})\n\`\`\`${file.language.toLowerCase()}\n${file.content.slice(0, 6000)}\n\`\`\``, // Reduced from 8000 to 6000
       )
       .join("\n\n")
 
@@ -416,17 +372,21 @@ Format the output in Markdown.
 
     console.log(`Starting API call to ${providerName}/${modelName}...`)
 
-    // Enhanced API call with retry logic - no timeout
+    // Enhanced API call with retry logic and timeout
     const generateWithRetry = () =>
       withRetry(
         () =>
-          generateText({
-            model: provider(modelName),
-            prompt,
-            maxTokens: Math.min(4000, Math.floor(maxTokens * 0.8)),
-          }),
-        2, // Max 2 retries
-        500, // 500ms delay between retries
+          withTimeout(
+            generateText({
+              model: provider(modelName),
+              prompt,
+              maxTokens: Math.min(3000, Math.floor(maxTokens * 0.6)), // Reduced token limit
+            }),
+            API_CALL_TIMEOUT,
+            `API call to ${providerName}/${modelName}`,
+          ),
+        1, // Reduced retries from 2 to 1
+        300, // Reduced delay from 500ms to 300ms
       )
 
     const { text } = await generateWithRetry()
@@ -457,7 +417,7 @@ Format the output in Markdown.
   }
 }
 
-// Main function - no timeout restrictions
+// Main function with timeout restrictions
 export async function generateDocumentationFromFiles(
   formData: FormData,
   selectedProvider?: string,
@@ -466,8 +426,12 @@ export async function generateDocumentationFromFiles(
   const globalStartTime = Date.now()
 
   try {
-    // No timeout for both local and production
-    return await generateDocumentationInternal(formData, selectedProvider, globalStartTime)
+    // Apply global timeout for the entire operation
+    return await withTimeout(
+      generateDocumentationInternal(formData, selectedProvider, globalStartTime),
+      PRODUCTION_TIMEOUT,
+      "Documentation generation",
+    )
   } catch (error) {
     console.error("Global error:", error)
     return {
@@ -486,12 +450,16 @@ async function generateDocumentationInternal(
   let files: Array<{ path: string; content: string; language: string }>
   let projectInfo: ProjectInfo
 
-  // Process files - no timeout
+  // Process files with timeout
   const gitUrl = formData.get("gitUrl") as string
   if (gitUrl) {
     try {
       console.log(`🔍 Processing GitHub repository: ${gitUrl}`)
-      const result = await processGitRepository(gitUrl)
+      const result = await withTimeout(
+        processGitRepository(gitUrl),
+        20000, // 20 seconds for GitHub processing
+        "GitHub repository processing",
+      )
       files = result.files
       projectInfo = result.projectInfo
       console.log(`✅ Successfully processed GitHub repository with ${files.length} files`)
@@ -519,7 +487,11 @@ async function generateDocumentationInternal(
 
       if (isZipFile) {
         try {
-          const result = await processZipFile(zipFile)
+          const result = await withTimeout(
+            processZipFile(zipFile),
+            15000, // 15 seconds for ZIP processing
+            "ZIP file processing",
+          )
           files = result.files
           projectInfo = result.projectInfo
         } catch (error) {
@@ -551,36 +523,18 @@ async function generateDocumentationInternal(
 
   console.log(`📁 Found ${files.length} files to analyze`)
 
-  // ALL PROVIDERS - no restrictions for both local and production
-  const allProviders = [
-    "groq",
-    "openai",
-    "xai",
-    "openrouter",
-    "deepinfra",
-    "together",
-    "fireworks",
-    "cerebras",
-    "huggingface",
-    "mistral",
-    "replicate",
-    "perplexity",
-    "anyscale",
-    "cohere",
-    "anthropic",
-    "aleph",
-    "stability",
-    "gemini",
-    "claude",
-  ]
+  // LIMITED PROVIDERS for free plan - focus on fastest/most reliable
+  const priorityProviders = ["groq", "openai", "deepinfra", "together", "fireworks"]
 
-  const availableProviders = allProviders.filter((provider) => {
+  const availableProviders = priorityProviders.filter((provider) => {
     const envKey = `${provider.toUpperCase()}_API_KEY`
     return !!process.env[envKey]
   })
 
   const providersToTest =
-    selectedProvider && availableProviders.includes(selectedProvider) ? [selectedProvider] : availableProviders
+    selectedProvider && availableProviders.includes(selectedProvider)
+      ? [selectedProvider]
+      : availableProviders.slice(0, 3) // Limit to 3 providers
 
   if (providersToTest.length === 0) {
     return {
@@ -592,27 +546,15 @@ async function generateDocumentationInternal(
   console.log(`🔑 Testing providers: ${providersToTest.join(", ")}`)
   console.log(`🔑 Environment: ${isProduction ? "Production" : "Development"}`)
 
-  // NO LIMITS - test ALL models from ALL providers
-  const progress = {
-    total: 0,
-    completed: 0,
-    currentProvider: "",
-    currentModel: "",
-  }
-
-  // Calculate total models to test
-  progress.total = providersToTest.reduce((acc, provider) => {
-    const models = PROVIDER_MODELS[provider as keyof typeof PROVIDER_MODELS] || []
-    return acc + models.length
-  }, 0)
-
-  console.log(`🎯 Will test ALL ${progress.total} models total`)
-
+  // LIMITED MODELS - test only fastest models to stay within 60-second limit
   const results: DocumentationResult[] = []
   let currentResultCount = 0
+  const maxResults = 5 // Limit total results
 
-  // Process ALL providers with ALL models
+  // Process providers with limited models
   for (const providerName of providersToTest) {
+    if (currentResultCount >= maxResults) break
+
     try {
       const provider = providers[providerName as keyof typeof providers]
       if (!provider) {
@@ -622,15 +564,24 @@ async function generateDocumentationInternal(
 
       const models = PROVIDER_MODELS[providerName as keyof typeof PROVIDER_MODELS] || []
 
-      // Test ALL models for each provider
-      console.log(`🤖 Testing ALL ${models.length} models for ${providerName}`)
+      // Test only the first 2 fastest models per provider
+      const fastModels = models.slice(0, 2)
+      console.log(`🤖 Testing ${fastModels.length} models for ${providerName}`)
 
-      // Sequential processing to avoid overwhelming the system
-      for (const model of models) {
+      // Sequential processing with timeout checks
+      for (const model of fastModels) {
+        if (currentResultCount >= maxResults) break
+
+        // Check if we're running out of time
+        const elapsed = Date.now() - startTime
+        if (elapsed > 45000) {
+          // Stop if we've used 45 seconds
+          console.log("⏰ Approaching timeout limit, stopping model testing")
+          break
+        }
+
         try {
           console.log(`   Trying ${providerName}/${model.name}...`)
-          progress.currentProvider = providerName
-          progress.currentModel = model.name
 
           const result = await generateSingleDocumentation(
             files,
@@ -644,14 +595,8 @@ async function generateDocumentationInternal(
           results.push(result)
           currentResultCount++
 
-          // Add a small delay between API calls to be respectful
-          await new Promise((resolve) => setTimeout(resolve, 100))
-
-          // Update progress
-          progress.completed++
-          console.log(
-            `Progress: ${progress.completed}/${progress.total} (${Math.round((progress.completed / progress.total) * 100)}%)`,
-          )
+          // Reduced delay between API calls
+          await new Promise((resolve) => setTimeout(resolve, 50))
         } catch (modelError) {
           console.error(`Error with model ${model.name}:`, modelError)
           results.push({
@@ -661,7 +606,6 @@ async function generateDocumentationInternal(
             error: modelError instanceof Error ? modelError.message : "Model error",
           })
           currentResultCount++
-          progress.completed++
         }
       }
     } catch (providerError) {
@@ -672,7 +616,6 @@ async function generateDocumentationInternal(
         error: providerError instanceof Error ? providerError.message : "Provider error",
       })
       currentResultCount++
-      progress.completed++
     }
   }
 
@@ -698,7 +641,7 @@ async function generateDocumentationInternal(
   }
 }
 
-// GitHub repository processing - no timeout
+// GitHub repository processing with timeout
 async function processGitRepository(gitUrl: string): Promise<{
   files: Array<{ path: string; content: string; language: string }>
   projectInfo: ProjectInfo
@@ -742,7 +685,7 @@ async function processGitRepository(gitUrl: string): Promise<{
       const contents = await response.json()
 
       let fileCount = 0
-      const maxFilesPerDirectory = 15 // Increased limit
+      const maxFilesPerDirectory = 10 // Reduced from 15 to 10
 
       for (const item of contents) {
         if (fileCount >= maxFilesPerDirectory) {
@@ -753,7 +696,8 @@ async function processGitRepository(gitUrl: string): Promise<{
         if (item.type === "file") {
           const ext = item.name.substring(item.name.lastIndexOf(".")).toLowerCase()
 
-          if (SUPPORTED_EXTENSIONS.includes(ext) && item.size < 100000) {
+          if (SUPPORTED_EXTENSIONS.includes(ext) && item.size < 50000) {
+            // Reduced from 100000 to 50000
             try {
               const fileResponse = await fetch(item.download_url, { headers })
 
@@ -778,7 +722,7 @@ async function processGitRepository(gitUrl: string): Promise<{
 
               files.push({
                 path: filePath,
-                content: content.slice(0, 8000),
+                content: content.slice(0, 6000), // Reduced from 8000 to 6000
                 language,
               })
 
@@ -787,7 +731,8 @@ async function processGitRepository(gitUrl: string): Promise<{
               console.warn(`Could not read file: ${item.name}`, error)
             }
           }
-        } else if (item.type === "dir" && files.length < 50) {
+        } else if (item.type === "dir" && files.length < 30) {
+          // Reduced from 50 to 30
           const dirPath = currentPath ? `${currentPath}/${item.name}` : item.name
           directories.add(dirPath)
 
@@ -829,7 +774,7 @@ async function processGitRepository(gitUrl: string): Promise<{
               f.path.includes("page.") ||
               f.path.includes("component"),
           )
-          .slice(0, 10)
+          .slice(0, 8) // Reduced from 10 to 8
           .map((f) => ({
             path: f.path,
             purpose: f.path.includes("page") ? "Application page" : "Key component",
@@ -846,7 +791,7 @@ async function processGitRepository(gitUrl: string): Promise<{
   }
 }
 
-// ZIP file processing - no timeout
+// ZIP file processing with timeout
 async function processZipFile(zipFile: File): Promise<{
   files: Array<{ path: string; content: string; language: string }>
   projectInfo: ProjectInfo
@@ -874,8 +819,8 @@ async function processZipFile(zipFile: File): Promise<{
       throw new Error("ZIP file appears to be empty")
     }
 
-    // Increased file limit
-    const maxFiles = 100
+    // Reduced file limit for faster processing
+    const maxFiles = 50 // Reduced from 100 to 50
     let fileCount = 0
 
     for (const [relativePath, zipEntry] of entries) {
@@ -916,10 +861,11 @@ async function processZipFile(zipFile: File): Promise<{
             }
           }
 
-          if (content.length < 20000) {
+          if (content.length < 15000) {
+            // Reduced from 20000 to 15000
             files.push({
               path: relativePath,
-              content: content.slice(0, 8000),
+              content: content.slice(0, 6000), // Reduced from 8000 to 6000
               language,
             })
             fileCount++
@@ -963,10 +909,9 @@ async function processZipFile(zipFile: File): Promise<{
               f.path.includes("page.") ||
               f.path.includes("component"),
           )
-          .slice(0, 10)
+          .slice(0, 8) // Reduced from 10 to 8
           .map((f) => ({
             path: f.path,
-            purpose: f.path.includes("page") ? "Application page" : "Key component",
             purpose: f.path.includes("page") ? "Application page" : "Key component",
             type: f.language,
           })),
