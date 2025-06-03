@@ -1,4 +1,4 @@
-// Provider configurations and model definitions - Cleaned and deduplicated
+// Provider configurations and model definitions - Expanded with all free AI providers
 export const PROVIDER_MODELS = {
   groq: [
     {
@@ -12,20 +12,23 @@ export const PROVIDER_MODELS = {
       description: "Meta Llama 3.1 8B - Ultra Fast (Vercel Integrated)",
     },
     { name: "gemma2-9b-it", maxTokens: 10000, description: "Google Gemma 2 9B - Balanced Performance" },
-    { name: "qwen-qwq-32b", maxTokens: 10000, description: "Qwen QwQ 32B - Advanced Reasoning" },
+    { name: "qwen-qwq-32b", maxTokens: 10000, description: "Google Gemma 2 9B - Balanced Performance" },
     { name: "llama3-70b-8192", maxTokens: 8000, description: "Llama 3 70B - High Performance" },
     { name: "mixtral-8x7b-32768", maxTokens: 15000, description: "Mixtral 8x7B - Advanced Reasoning" },
-    { name: "llama3-8b-8192", maxTokens: 4096, description: "Llama 3 8B - Fast and Efficient" },
-    { name: "llama-3.1-70b-versatile", maxTokens: 4096, description: "Llama 3.1 70B - Versatile Performance" },
-    { name: "gemma-7b-it", maxTokens: 4096, description: "Google Gemma 7B - Instruction Tuned" },
+    { name: "llama3-8b-8192", maxTokens: 4096 },
+    { name: "llama3-70b-8192", maxTokens: 4096 },
+    { name: "mixtral-8x7b-32768", maxTokens: 4096 },
+    { name: "llama-3.1-70b-versatile", maxTokens: 4096 },
+    { name: "llama-3.1-8b-instant", maxTokens: 4096 },
+    { name: "gemma-7b-it", maxTokens: 4096 },
   ],
   openai: [
     { name: "gpt-4o-mini", maxTokens: 8000, description: "GPT-4o Mini - Cost Effective" },
     { name: "gpt-3.5-turbo", maxTokens: 4000, description: "GPT-3.5 Turbo - Fast and Reliable" },
     { name: "gpt-4", maxTokens: 8000, description: "GPT-4 - Most Capable" },
     { name: "gpt-4-turbo", maxTokens: 8000, description: "GPT-4 Turbo - Enhanced Performance" },
-    { name: "gpt-4-32k", maxTokens: 32768, description: "GPT-4 32K - Extended Context" },
-    { name: "gpt-4o", maxTokens: 8192, description: "GPT-4o - Optimized Performance" },
+    { name: "gpt-4-32k", maxTokens: 32768 },
+    { name: "gpt-4o", maxTokens: 8192 },
   ],
   deepinfra: [
     { name: "meta-llama/Llama-3.3-70B-Instruct", maxTokens: 8000, description: "Llama 3.3 70B - Latest Model" },
@@ -33,8 +36,13 @@ export const PROVIDER_MODELS = {
     { name: "microsoft/WizardLM-2-8x22B", maxTokens: 10000, description: "WizardLM 2 - Advanced Reasoning" },
     { name: "Qwen/Qwen2.5-72B-Instruct", maxTokens: 8000, description: "Qwen 2.5 72B - Multilingual Support" },
     { name: "nvidia/Llama-3.1-Nemotron-70B-Instruct", maxTokens: 8000, description: "Nemotron 70B - NVIDIA Optimized" },
-    { name: "mistralai/Mixtral-8x7B-Instruct-v0.1", maxTokens: 4096, description: "Mixtral 8x7B - Mixture of Experts" },
-    { name: "google/gemma-2-27b-it", maxTokens: 4096, description: "Google Gemma 2 27B - Instruction Tuned" },
+    { name: "meta-llama/Llama-3.3-70B-Instruct", maxTokens: 4096 },
+    { name: "meta-llama/Llama-3.1-8B-Instruct", maxTokens: 4096 },
+    { name: "microsoft/WizardLM-2-8x22B", maxTokens: 4096 },
+    { name: "Qwen/Qwen2.5-72B-Instruct", maxTokens: 4096 },
+    { name: "nvidia/Llama-3.1-Nemotron-70B-Instruct", maxTokens: 4096 },
+    { name: "mistralai/Mixtral-8x7B-Instruct-v0.1", maxTokens: 4096 },
+    { name: "google/gemma-2-27b-it", maxTokens: 4096 },
   ],
   together: [
     {
@@ -46,19 +54,23 @@ export const PROVIDER_MODELS = {
     { name: "Qwen/Qwen2.5-7B-Instruct-Turbo", maxTokens: 6000, description: "Qwen 2.5 7B Turbo" },
     { name: "meta-llama/Llama-3.1-70B-Instruct-Turbo", maxTokens: 8000, description: "Llama 3.1 70B Turbo" },
     { name: "mistralai/Mixtral-8x7B-Instruct-v0.1", maxTokens: 6000, description: "Mixtral 8x7B" },
-    { name: "google/gemma-2-9b-it", maxTokens: 4096, description: "Google Gemma 2 9B" },
-    { name: "microsoft/DialoGPT-medium", maxTokens: 4096, description: "DialoGPT Medium - Conversational" },
+    { name: "meta-llama/Llama-3.2-11B-Vision-Instruct-Turbo", maxTokens: 4096 },
+    { name: "meta-llama/Llama-3.1-8B-Instruct-Turbo", maxTokens: 4096 },
+    { name: "Qwen/Qwen2.5-7B-Instruct-Turbo", maxTokens: 4096 },
+    { name: "meta-llama/Llama-3.1-70B-Instruct-Turbo", maxTokens: 4096 },
+    { name: "mistralai/Mixtral-8x7B-Instruct-v0.1", maxTokens: 4096 },
+    { name: "google/gemma-2-9b-it", maxTokens: 4096 },
+    { name: "microsoft/DialoGPT-medium", maxTokens: 4096 },
   ],
   fireworks: [
     { name: "accounts/fireworks/models/llama-v3p1-8b-instruct", maxTokens: 6000, description: "Llama 3.1 8B" },
     { name: "accounts/fireworks/models/qwen2p5-7b-instruct", maxTokens: 6000, description: "Qwen 2.5 7B" },
     { name: "accounts/fireworks/models/llama-v3p1-70b-instruct", maxTokens: 8000, description: "Llama 3.1 70B" },
     { name: "accounts/fireworks/models/mixtral-8x7b-instruct", maxTokens: 6000, description: "Mixtral 8x7B" },
-    {
-      name: "accounts/fireworks/models/mixtral-8x7b-32k-instruct",
-      maxTokens: 4096,
-      description: "Mixtral 8x7B 32K Context",
-    },
+    { name: "accounts/fireworks/models/mixtral-8x7b-32k-instruct", maxTokens: 4096 },
+    { name: "accounts/fireworks/models/llama-v3p1-8b-instruct", maxTokens: 4096 },
+    { name: "accounts/fireworks/models/llama-v3p1-70b-instruct", maxTokens: 4096 },
+    { name: "accounts/fireworks/models/qwen2p5-7b-instruct", maxTokens: 4096 },
   ],
   cerebras: [
     { name: "llama3.1-8b", maxTokens: 5000, description: "Llama 3.1 8B - Ultra Fast Inference" },
@@ -72,40 +84,51 @@ export const PROVIDER_MODELS = {
     { name: "qwen/qwen-2.5-7b-instruct:free", maxTokens: 6000, description: "Qwen 2.5 7B (Free Tier)" },
     { name: "anthropic/claude-3-haiku:beta", maxTokens: 8000, description: "Claude 3 Haiku (Beta)" },
     { name: "nousresearch/nous-capybara-7b:free", maxTokens: 6000, description: "Nous Capybara 7B (Free)" },
-    { name: "mistralai/mistral-7b-instruct:free", maxTokens: 6000, description: "Mistral 7B (Free)" },
-    { name: "openchat/openchat-7b:free", maxTokens: 6000, description: "OpenChat 7B (Free)" },
-    { name: "gryphe/mythomist-7b:free", maxTokens: 6000, description: "MythoMist 7B (Free)" },
-    { name: "undi95/toppy-m-7b:free", maxTokens: 6000, description: "Toppy M 7B (Free)" },
-    { name: "openai/gpt-3.5-turbo", maxTokens: 4096, description: "GPT-3.5 Turbo via OpenRouter" },
-    { name: "google/gemini-pro", maxTokens: 4096, description: "Gemini Pro via OpenRouter" },
-    { name: "huggingface/zephyr-7b-beta:free", maxTokens: 4096, description: "Zephyr 7B Beta (Free)" },
+  { name: "mistralai/mistral-7b-instruct:free", maxTokens: 6000, description: "Mistral 7B (Free)" },
+  { name: "openchat/openchat-7b:free", maxTokens: 6000, description: "OpenChat 7B (Free)" },
+  { name: "gryphe/mythomist-7b:free", maxTokens: 6000, description: "MythoMist 7B (Free)" },
+  { name: "undi95/toppy-m-7b:free", maxTokens: 6000, description: "Toppy M 7B (Free)" },
+  { name: "openai/gpt-3.5-turbo", maxTokens: 4096 },
+  { name: "meta-llama/llama-3.1-8b-instruct:free", maxTokens: 4096 },
+  { name: "microsoft/wizardlm-2-8x22b:free", maxTokens: 4096 },
+  { name: "google/gemma-2-9b-it:free", maxTokens: 4096 },
+  { name: "qwen/qwen-2.5-7b-instruct:free", maxTokens: 4096 },
+  { name: "anthropic/claude-3-haiku:beta", maxTokens: 4096 },
+  { name: "google/gemini-pro", maxTokens: 4096 },
+  
+  { name: "huggingface/zephyr-7b-beta:free", maxTokens: 4096 },
+  
   ],
   xai: [
     { name: "grok-beta", maxTokens: 10000, description: "Grok Beta - Latest xAI Model" },
     { name: "grok-vision-beta", maxTokens: 8000, description: "Grok Vision - Multimodal Capabilities" },
-    { name: "grok-2-latest", maxTokens: 8000, description: "Grok 2 Latest - Advanced Reasoning" },
-    { name: "grok-2-1212", maxTokens: 8192, description: "Grok 2 December Release" },
+    { name: "grok-2-latest", maxTokens: 8000, description: "Grok Vision - Multimodal Capabilities" },
+    { name: "grok-2-latest", maxTokens: 8192 },
+    { name: "grok-2-1212", maxTokens: 8192 },
   ],
   huggingface: [
     { name: "microsoft/DialoGPT-large", maxTokens: 4000, description: "DialoGPT Large - Conversational AI" },
     { name: "microsoft/DialoGPT-medium", maxTokens: 3000, description: "DialoGPT Medium - Balanced Performance" },
     { name: "google/flan-t5-large", maxTokens: 4000, description: "FLAN-T5 Large - Instruction Following" },
     { name: "bigscience/bloom-7b1", maxTokens: 5000, description: "BLOOM 7B - Multilingual Model" },
+   
     { name: "microsoft/CodeBERT-base", maxTokens: 6000, description: "CodeBERT Base - Code Focused" },
     { name: "Salesforce/codegen-350M-mono", maxTokens: 4000, description: "CodeGen 350M - Code Generation" },
     { name: "bigcode/starcoder", maxTokens: 8000, description: "StarCoder - Code Expert" },
-    { name: "google/flan-t5-xxl", maxTokens: 4096, description: "FLAN-T5 XXL - Large Instruction Model" },
-    { name: "facebook/blenderbot-400M-distill", maxTokens: 4096, description: "BlenderBot 400M - Conversational" },
+    { name: "google/flan-t5-xxl", maxTokens: 4096 },
+    { name: "microsoft/DialoGPT-large", maxTokens: 4096 },
+    { name: "facebook/blenderbot-400M-distill", maxTokens: 4096 },
   ],
   mistral: [
     { name: "mistral-tiny", maxTokens: 4000, description: "Mistral Tiny - Fast and Efficient" },
     { name: "mistral-small", maxTokens: 6000, description: "Mistral Small - Balanced Performance" },
     { name: "mistral-medium", maxTokens: 8000, description: "Mistral Medium - High Quality" },
     { name: "open-mistral-7b", maxTokens: 5000, description: "Open Mistral 7B - Open Source" },
-    { name: "mistral-large-latest", maxTokens: 4096, description: "Mistral Large - Most Capable" },
-    { name: "mistral-medium-latest", maxTokens: 4096, description: "Mistral Medium Latest" },
-    { name: "mistral-small-latest", maxTokens: 4096, description: "Mistral Small Latest" },
-    { name: "open-mixtral-8x7b", maxTokens: 4096, description: "Open Mixtral 8x7B - Mixture of Experts" },
+    { name: "mistral-large-latest", maxTokens: 4096 },
+    { name: "mistral-medium-latest", maxTokens: 4096 },
+    { name: "mistral-small-latest", maxTokens: 4096 },
+    { name: "open-mistral-7b", maxTokens: 4096 },
+    { name: "open-mixtral-8x7b", maxTokens: 4096 },
   ],
   replicate: [
     { name: "meta/llama-2-70b-chat", maxTokens: 8000, description: "Llama 2 70B Chat - Conversational" },
@@ -113,19 +136,27 @@ export const PROVIDER_MODELS = {
     { name: "meta/llama-2-7b-chat", maxTokens: 4000, description: "Llama 2 7B Chat - Fast" },
     { name: "mistralai/mixtral-8x7b-instruct-v0.1", maxTokens: 6000, description: "Mixtral 8x7B Instruct" },
     { name: "togethercomputer/llama-2-7b-chat", maxTokens: 6000, description: "Llama 2 7B Together - Free" },
+    { name: "meta/llama-2-70b-chat", maxTokens: 4096 },
+    { name: "meta/llama-2-13b-chat", maxTokens: 4096 },
+    { name: "meta/llama-2-7b-chat", maxTokens: 4096 },
   ],
   perplexity: [
     { name: "llama-3.1-sonar-small-128k-online", maxTokens: 8000, description: "Sonar Small - Online Search" },
     { name: "llama-3.1-sonar-large-128k-online", maxTokens: 10000, description: "Sonar Large - Online Search" },
     { name: "llama-3.1-8b-instruct", maxTokens: 6000, description: "Llama 3.1 8B Instruct" },
     { name: "llama-3.1-70b-instruct", maxTokens: 8000, description: "Llama 3.1 70B Instruct" },
-    { name: "llama-3.1-sonar-huge-128k-online", maxTokens: 4096, description: "Sonar Huge - Online Search" },
+    { name: "llama-3.1-sonar-huge-128k-online", maxTokens: 4096 },
   ],
   anyscale: [
     { name: "meta-llama/Llama-2-7b-chat-hf", maxTokens: 4000, description: "Llama 2 7B Chat" },
     { name: "meta-llama/Llama-2-13b-chat-hf", maxTokens: 6000, description: "Llama 2 13B Chat" },
     { name: "meta-llama/Llama-2-70b-chat-hf", maxTokens: 8000, description: "Llama 2 70B Chat" },
     { name: "codellama/CodeLlama-34b-Instruct-hf", maxTokens: 6000, description: "Code Llama 34B Instruct" },
+    { name: "meta-llama/Llama-2-7b-chat-hf", maxTokens: 4096 },
+    { name: "meta-llama/Llama-2-13b-chat-hf", maxTokens: 4096 },
+    { name: "meta-llama/Llama-2-70b-chat-hf", maxTokens: 4096 },  
+    
+   
     { name: "mistralai/Mistral-7B-Instruct-v0.1", maxTokens: 6000, description: "Mistral 7B - Anyscale Free" },
   ],
   cohere: [
@@ -133,48 +164,60 @@ export const PROVIDER_MODELS = {
     { name: "command-light", maxTokens: 3000, description: "Command Light - Fast and Efficient" },
     { name: "command-nightly", maxTokens: 5000, description: "Command Nightly - Latest Features" },
     { name: "command-r", maxTokens: 6000, description: "Command R - Enhanced Reasoning" },
+    { name: "command", maxTokens: 4096 },
+    { name: "command-light", maxTokens: 4096 },
+    { name: "command-nightly", maxTokens: 4096 },
+    
+    
   ],
-  anthropic: [
-    { name: "claude-3-5-sonnet-20241022", maxTokens: 8000, description: "Claude 3.5 Sonnet - Most Capable" },
-    { name: "claude-3-haiku-20240307", maxTokens: 6000, description: "Claude 3 Haiku - Fast and Efficient" },
-    { name: "claude-3-opus-20240229", maxTokens: 8000, description: "Claude 3 Opus - Most Powerful" },
-    { name: "claude-3-sonnet-20240229", maxTokens: 8000, description: "Claude 3 Sonnet - Balanced Performance" },
-  ],
-  gemini: [
-    { name: "gemini-1.5-flash", maxTokens: 8000, description: "Gemini 1.5 Flash - Fast and Free" },
-    { name: "gemini-1.5-pro", maxTokens: 8000, description: "Gemini 1.5 Pro - Most Capable" },
-    { name: "gemini-pro", maxTokens: 6000, description: "Gemini Pro - Balanced Performance" },
-    { name: "gemini-pro-vision", maxTokens: 6000, description: "Gemini Pro Vision - Multimodal" },
-  ],
-  aleph: [
-    { name: "luminous-base", maxTokens: 4000, description: "Luminous Base - Multilingual Foundation" },
-    { name: "luminous-extended", maxTokens: 6000, description: "Luminous Extended - Enhanced Capabilities" },
-    { name: "luminous-supreme", maxTokens: 8000, description: "Luminous Supreme - Most Advanced" },
-    { name: "luminous-supreme-control", maxTokens: 8000, description: "Luminous Supreme Control - Fine-tuned" },
-  ],
-  stability: [
-    { name: "stable-code-instruct-3b", maxTokens: 6000, description: "Stable Code Instruct 3B - Code Generation" },
-    { name: "stablelm-2-1_6b", maxTokens: 4000, description: "StableLM 2 1.6B - Lightweight Model" },
-    { name: "stablelm-2-12b", maxTokens: 6000, description: "StableLM 2 12B - Balanced Performance" },
-    { name: "stable-beluga-7b", maxTokens: 6000, description: "Stable Beluga 7B - Instruction Following" },
-    { name: "stable-diffusion-xl-1024-v1-0", maxTokens: 4096, description: "Stable Diffusion XL - Image Generation" },
-    { name: "stable-diffusion-v1-6", maxTokens: 4096, description: "Stable Diffusion v1.6 - Image Generation" },
-  ],
-  claude: [
-    { name: "claude-3-5-sonnet-20241022", maxTokens: 8000, description: "Claude 3.5 Sonnet - Latest Version" },
-    { name: "claude-3-haiku-20240307", maxTokens: 6000, description: "Claude 3 Haiku - Fast Response" },
-    { name: "claude-3-opus-20240229", maxTokens: 8000, description: "Claude 3 Opus - Maximum Capability" },
-    { name: "claude-instant-1.2", maxTokens: 4096, description: "Claude Instant - Fast Response" },
-    { name: "claude-2.1", maxTokens: 4096, description: "Claude 2.1 - Previous Generation" },
-  ],
-  ollama: [
-    { name: "llama3.2:3b", maxTokens: 6000, description: "Llama 3.2 3B - Local, Fast, Free" },
-    { name: "llama3.2:1b", maxTokens: 4000, description: "Llama 3.2 1B - Ultra Fast Local" },
-    { name: "codellama:7b", maxTokens: 6000, description: "Code Llama 7B - Local Code Expert" },
-    { name: "mistral:7b", maxTokens: 6000, description: "Mistral 7B - Local Multilingual" },
-    { name: "qwen2.5:7b", maxTokens: 6000, description: "Qwen 2.5 7B - Local Advanced" },
-    { name: "gemma2:2b", maxTokens: 4000, description: "Gemma 2 2B - Local Lightweight" },
-  ],
+  // NEW PROVIDERS - MISSING FROM YOUR CODE
+anthropic: [
+  { name: "claude-3-5-sonnet-20241022", maxTokens: 8000, description: "Claude 3.5 Sonnet - Most Capable" },
+  { name: "claude-3-haiku-20240307", maxTokens: 6000, description: "Claude 3 Haiku - Fast and Efficient" },
+  { name: "claude-3-opus-20240229", maxTokens: 8000, description: "Claude 3 Opus - Most Powerful" },
+  { name: "claude-3-sonnet-20240229", maxTokens: 8000, description: "Claude 3 Sonnet - Balanced Performance" },
+  { name: "claude-3-opus-20240229", maxTokens: 4096 },
+  { name: "claude-3-sonnet-20240229", maxTokens: 4096 },
+  { name: "claude-3-haiku-20240307", maxTokens: 4096 },
+],
+gemini: [
+  { name: "gemini-1.5-flash", maxTokens: 8000, description: "Gemini 1.5 Flash - Fast and Free" },
+  { name: "gemini-1.5-pro", maxTokens: 8000, description: "Gemini 1.5 Pro - Most Capable" },
+  { name: "gemini-pro", maxTokens: 6000, description: "Gemini Pro - Balanced Performance" },
+  { name: "gemini-pro-vision", maxTokens: 6000, description: "Gemini Pro Vision - Multimodal" },
+],
+aleph: [
+  { name: "luminous-base", maxTokens: 4000, description: "Luminous Base - Multilingual Foundation" },
+  { name: "luminous-extended", maxTokens: 6000, description: "Luminous Extended - Enhanced Capabilities" },
+  { name: "luminous-supreme", maxTokens: 8000, description: "Luminous Supreme - Most Advanced" },
+  { name: "luminous-supreme-control", maxTokens: 8000, description: "Luminous Supreme Control - Fine-tuned" },
+  { name: "luminous-base", maxTokens: 4096 },
+  { name: "luminous-extended", maxTokens: 4096 },
+  { name: "luminous-supreme", maxTokens: 4096 },
+],
+stability: [
+  { name: "stable-code-instruct-3b", maxTokens: 6000, description: "Stable Code Instruct 3B - Code Generation" },
+  { name: "stablelm-2-1_6b", maxTokens: 4000, description: "StableLM 2 1.6B - Lightweight Model" },
+  { name: "stablelm-2-12b", maxTokens: 6000, description: "StableLM 2 12B - Balanced Performance" },
+  { name: "stable-beluga-7b", maxTokens: 6000, description: "Stable Beluga 7B - Instruction Following" },
+  { name: "stable-diffusion-xl-1024-v1-0", maxTokens: 4096 },
+  { name: "stable-diffusion-v1-6", maxTokens: 4096 },
+],
+claude: [
+  { name: "claude-3-5-sonnet-20241022", maxTokens: 8000, description: "Claude 3.5 Sonnet - Latest Version" },
+  { name: "claude-3-haiku-20240307", maxTokens: 6000, description: "Claude 3 Haiku - Fast Response" },
+  { name: "claude-3-opus-20240229", maxTokens: 8000, description: "Claude 3 Opus - Maximum Capability" },
+  { name: "claude-instant-1.2", maxTokens: 4096 },
+  { name: "claude-2.1", maxTokens: 4096 },
+],
+ollama: [
+  { name: "llama3.2:3b", maxTokens: 6000, description: "Llama 3.2 3B - Local, Fast, Free" },
+  { name: "llama3.2:1b", maxTokens: 4000, description: "Llama 3.2 1B - Ultra Fast Local" },
+  { name: "codellama:7b", maxTokens: 6000, description: "Code Llama 7B - Local Code Expert" },
+  { name: "mistral:7b", maxTokens: 6000, description: "Mistral 7B - Local Multilingual" },
+  { name: "qwen2.5:7b", maxTokens: 6000, description: "Qwen 2.5 7B - Local Advanced" },
+  { name: "gemma2:2b", maxTokens: 4000, description: "Gemma 2 2B - Local Lightweight" },
+],
 }
 
 export const PROVIDER_INFO = {
@@ -262,6 +305,7 @@ export const PROVIDER_INFO = {
     website: "dashboard.cohere.com",
     integrated: false,
   },
+  // NEW PROVIDERS INFO
   anthropic: {
     name: "Anthropic",
     description: "Claude models with strong reasoning capabilities",
@@ -298,21 +342,4 @@ export const PROVIDER_INFO = {
     website: "ollama.ai",
     integrated: false,
   },
-} as const
-
-// Helper function to safely get provider info
-export function getProviderInfo(provider: string) {
-  return (
-    PROVIDER_INFO[provider as keyof typeof PROVIDER_INFO] || {
-      name: provider.charAt(0).toUpperCase() + provider.slice(1),
-      description: "AI provider",
-      website: "",
-      integrated: false,
-    }
-  )
-}
-
-// Helper function to safely get provider models
-export function getProviderModels(provider: string) {
-  return PROVIDER_MODELS[provider as keyof typeof PROVIDER_MODELS] || []
 }
