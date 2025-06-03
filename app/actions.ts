@@ -724,6 +724,10 @@ export async function generateDocumentationComparison(
   projectPath: string,
   selectedProvider?: string,
 ): Promise<GenerateDocumentationResult> {
+  console.log("🚀 Starting local documentation generation...")
+  console.log("Project path:", projectPath)
+  console.log("Selected provider:", selectedProvider)
+
   try {
     // Validate path
     try {
