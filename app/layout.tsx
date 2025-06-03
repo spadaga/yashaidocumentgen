@@ -11,6 +11,7 @@ export const metadata: Metadata = {
   icons: {
     icon: "/yash-logo-new.svg",
   },
+    generator: 'v0.dev'
 }
 
 export default function RootLayout({
